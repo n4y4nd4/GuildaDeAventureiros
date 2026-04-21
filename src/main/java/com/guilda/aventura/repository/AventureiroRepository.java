@@ -18,17 +18,25 @@ import java.util.Optional;
 public interface AventureiroRepository
         extends JpaRepository<Aventureiro, Long>, JpaSpecificationExecutor<Aventureiro> {
 
-    @Query("""
-        SELECT a FROM Aventureiro a
-        WHERE (:ativo IS NULL OR a.ativo = :ativo)
-          AND (:classe IS NULL OR a.classe = :classe)
-          AND (:nivelMinimo IS NULL OR a.nivel >= :nivelMinimo)
-          AND a.organizacao.id = :orgId
-        """)
+    @Query(value = """
+        SELECT * FROM operacoes.aventureiro a
+        WHERE a.organizacao_id = :orgId
+          AND (CAST(:ativo AS boolean) IS NULL OR a.ativo = CAST(:ativo AS boolean))
+          AND (CAST(:classe AS text) IS NULL OR a.classe = CAST(:classe AS text))
+          AND (CAST(:nivelMinimo AS integer) IS NULL OR a.nivel >= CAST(:nivelMinimo AS integer))
+        """,
+        countQuery = """
+        SELECT COUNT(*) FROM operacoes.aventureiro a
+        WHERE a.organizacao_id = :orgId
+          AND (CAST(:ativo AS boolean) IS NULL OR a.ativo = CAST(:ativo AS boolean))
+          AND (CAST(:classe AS text) IS NULL OR a.classe = CAST(:classe AS text))
+          AND (CAST(:nivelMinimo AS integer) IS NULL OR a.nivel >= CAST(:nivelMinimo AS integer))
+        """,
+        nativeQuery = true)
     Page<Aventureiro> listarComFiltros(
             @Param("orgId") Long orgId,
             @Param("ativo") Boolean ativo,
-            @Param("classe") ClasseAventureiro classe,
+            @Param("classe") String classe,
             @Param("nivelMinimo") Integer nivelMinimo,
             Pageable pageable);
 
@@ -62,22 +70,21 @@ public interface AventureiroRepository
         """)
     Optional<AventureiroDetalheView> buscarDetalhe(@Param("id") Long id);
 
-    @Query("""
-        SELECT a.id AS id,
-               a.nome AS nome,
-               COUNT(p.missao) AS totalParticipacoes,
-               COALESCE(SUM(p.recompensaOuro), 0) AS totalRecompensas,
+    @Query(value = """
+        SELECT a.id, a.nome,
+               COUNT(p.missao_id) AS totalParticipacoes,
+               COALESCE(SUM(p.recompensa_ouro), 0) AS totalRecompensas,
                SUM(CASE WHEN p.destaque = true THEN 1 ELSE 0 END) AS totalMvps
-        FROM Aventureiro a
-        JOIN a.participacoes p
-        JOIN p.missao m
-        WHERE a.organizacao.id = :orgId
-          AND (:inicio IS NULL OR p.dataRegistro >= :inicio)
-          AND (:fim IS NULL OR p.dataRegistro <= :fim)
-          AND (:statusMissao IS NULL OR CAST(m.status AS string) = :statusMissao)
+        FROM operacoes.aventureiro a
+        JOIN operacoes.participacao_missao p ON a.id = p.aventureiro_id
+        JOIN operacoes.missao m ON m.id = p.missao_id
+        WHERE a.organizacao_id = :orgId
+          AND (CAST(:inicio AS timestamp) IS NULL OR p.data_registro >= CAST(:inicio AS timestamp))
+          AND (CAST(:fim AS timestamp) IS NULL OR p.data_registro <= CAST(:fim AS timestamp))
+          AND (CAST(:statusMissao AS text) IS NULL OR m.status = CAST(:statusMissao AS text))
         GROUP BY a.id, a.nome
         ORDER BY totalParticipacoes DESC, totalRecompensas DESC
-        """)
+        """, nativeQuery = true)
     List<RankingAventureiroView> ranking(
             @Param("orgId") Long orgId,
             @Param("inicio") LocalDateTime inicio,

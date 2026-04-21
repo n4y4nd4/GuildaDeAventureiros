@@ -27,7 +27,9 @@ public class MissaoQueryService {
                                 LocalDateTime dataInicio,
                                 LocalDateTime dataFim,
                                 Pageable pageable) {
-        return repository.listarComFiltros(orgId, status, nivelPerigo, dataInicio, dataFim, pageable);
+        String statusStr = status != null ? status.name() : null;
+        String nivelPerigoStr = nivelPerigo != null ? nivelPerigo.name() : null;
+        return repository.listarComFiltros(orgId, statusStr, nivelPerigoStr, dataInicio, dataFim, pageable);
     }
 
     public Optional<Missao> detalhe(Long id) {

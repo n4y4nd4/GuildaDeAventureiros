@@ -19,20 +19,26 @@ import com.guilda.aventura.repository.ParticipacaoMissaoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 class AventuraQueryTest {
 
     @Autowired OrganizacaoRepository organizacaoRepository;
@@ -40,6 +46,7 @@ class AventuraQueryTest {
     @Autowired AventureiroRepository aventureiroRepository;
     @Autowired MissaoRepository missaoRepository;
     @Autowired ParticipacaoMissaoRepository participacaoRepository;
+    @Autowired TestEntityManager em;
 
     private Organizacao org;
     private Usuario usuario;
@@ -48,11 +55,11 @@ class AventuraQueryTest {
 
     @BeforeEach
     void setup() {
-        org = organizacaoRepository.findAll().stream().findFirst()
-            .orElseGet(() -> organizacaoRepository.save(new Organizacao("Guilda Teste")));
+        // Cria organização com nome único para isolar dados entre testes
+        org = organizacaoRepository.save(new Organizacao("Teste-" + UUID.randomUUID()));
 
         usuario = usuarioRepository.save(
-            new Usuario(org, "Admin", "admin@guilda.com", "hash", UsuarioStatus.ATIVO));
+            new Usuario(org, "Admin", UUID.randomUUID() + "@test.com", "hash", UsuarioStatus.ATIVO));
 
         ativo1 = aventureiroRepository.save(
             new Aventureiro(org, usuario, "Aldric", ClasseAventureiro.GUERREIRO, 10));
@@ -75,6 +82,10 @@ class AventuraQueryTest {
         ParticipacaoMissao p2 = new ParticipacaoMissao(missao, ativo2, PapelMissao.SUPORTE);
         p2.setRecompensaOuro(new BigDecimal("80.00"));
         participacaoRepository.save(p2);
+
+        // Força flush para que queries nativas vejam os dados
+        em.flush();
+        em.clear();
     }
 
     @Test
@@ -89,7 +100,7 @@ class AventuraQueryTest {
     @Test
     void listarAventureiros_filtroClasse_retornaApenasClasseCorreta() {
         Page<Aventureiro> result = aventureiroRepository.listarComFiltros(
-            org.getId(), null, ClasseAventureiro.GUERREIRO, null, PageRequest.of(0, 10));
+            org.getId(), null, ClasseAventureiro.GUERREIRO.name(), null, PageRequest.of(0, 10));
         assertThat(result.getContent()).allMatch(a -> a.getClasse() == ClasseAventureiro.GUERREIRO);
         System.out.println("[AventuraQueryTest] Guerreiros: " + result.getTotalElements());
     }
@@ -139,7 +150,7 @@ class AventuraQueryTest {
     @Test
     void listarMissoes_filtroStatus_retornaApenasStatusCorreto() {
         Page<Missao> result = missaoRepository.listarComFiltros(
-            org.getId(), StatusMissao.CONCLUIDA, null, null, null, PageRequest.of(0, 10));
+            org.getId(), StatusMissao.CONCLUIDA.name(), null, null, null, PageRequest.of(0, 10));
         assertThat(result.getContent()).allMatch(m -> m.getStatus() == StatusMissao.CONCLUIDA);
         System.out.println("[AventuraQueryTest] Missões CONCLUIDA: " + result.getTotalElements());
     }

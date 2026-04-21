@@ -16,18 +16,27 @@ import java.util.Optional;
 
 public interface MissaoRepository extends JpaRepository<Missao, Long> {
 
-    @Query("""
-        SELECT m FROM Missao m
-        WHERE m.organizacao.id = :orgId
-          AND (:status IS NULL OR m.status = :status)
-          AND (:nivelPerigo IS NULL OR m.nivelPerigo = :nivelPerigo)
-          AND (:dataInicio IS NULL OR m.dataInicio >= :dataInicio)
-          AND (:dataFim IS NULL OR m.dataFim <= :dataFim)
-        """)
+    @Query(value = """
+        SELECT * FROM operacoes.missao m
+        WHERE m.organizacao_id = :orgId
+          AND (CAST(:status AS text) IS NULL OR m.status = CAST(:status AS text))
+          AND (CAST(:nivelPerigo AS text) IS NULL OR m.nivel_perigo = CAST(:nivelPerigo AS text))
+          AND (CAST(:dataInicio AS timestamp) IS NULL OR m.data_inicio >= CAST(:dataInicio AS timestamp))
+          AND (CAST(:dataFim AS timestamp) IS NULL OR m.data_fim <= CAST(:dataFim AS timestamp))
+        """,
+        countQuery = """
+        SELECT COUNT(*) FROM operacoes.missao m
+        WHERE m.organizacao_id = :orgId
+          AND (CAST(:status AS text) IS NULL OR m.status = CAST(:status AS text))
+          AND (CAST(:nivelPerigo AS text) IS NULL OR m.nivel_perigo = CAST(:nivelPerigo AS text))
+          AND (CAST(:dataInicio AS timestamp) IS NULL OR m.data_inicio >= CAST(:dataInicio AS timestamp))
+          AND (CAST(:dataFim AS timestamp) IS NULL OR m.data_fim <= CAST(:dataFim AS timestamp))
+        """,
+        nativeQuery = true)
     Page<Missao> listarComFiltros(
             @Param("orgId") Long orgId,
-            @Param("status") StatusMissao status,
-            @Param("nivelPerigo") NivelPerigo nivelPerigo,
+            @Param("status") String status,
+            @Param("nivelPerigo") String nivelPerigo,
             @Param("dataInicio") LocalDateTime dataInicio,
             @Param("dataFim") LocalDateTime dataFim,
             Pageable pageable);
@@ -40,21 +49,18 @@ public interface MissaoRepository extends JpaRepository<Missao, Long> {
         """)
     Optional<Missao> buscarComParticipantes(@Param("id") Long id);
 
-    @Query("""
-        SELECT m.id AS id,
-               m.titulo AS titulo,
-               m.status AS status,
-               m.nivelPerigo AS nivelPerigo,
-               COUNT(p.aventureiro) AS totalParticipantes,
-               COALESCE(SUM(p.recompensaOuro), 0) AS totalRecompensas
-        FROM Missao m
-        LEFT JOIN m.participacoes p
-        WHERE m.organizacao.id = :orgId
-          AND (:dataInicio IS NULL OR m.dataCriacao >= :dataInicio)
-          AND (:dataFim IS NULL OR m.dataCriacao <= :dataFim)
-        GROUP BY m.id, m.titulo, m.status, m.nivelPerigo
-        ORDER BY m.dataCriacao DESC
-        """)
+    @Query(value = """
+        SELECT m.id, m.titulo, m.status, m.nivel_perigo AS nivelPerigo,
+               COUNT(p.aventureiro_id) AS totalParticipantes,
+               COALESCE(SUM(p.recompensa_ouro), 0) AS totalRecompensas
+        FROM operacoes.missao m
+        LEFT JOIN operacoes.participacao_missao p ON m.id = p.missao_id
+        WHERE m.organizacao_id = :orgId
+          AND (CAST(:dataInicio AS timestamp) IS NULL OR m.data_criacao >= CAST(:dataInicio AS timestamp))
+          AND (CAST(:dataFim AS timestamp) IS NULL OR m.data_criacao <= CAST(:dataFim AS timestamp))
+        GROUP BY m.id, m.titulo, m.status, m.nivel_perigo
+        ORDER BY m.data_criacao DESC
+        """, nativeQuery = true)
     List<RelatorioMissaoView> relatorio(
             @Param("orgId") Long orgId,
             @Param("dataInicio") LocalDateTime dataInicio,

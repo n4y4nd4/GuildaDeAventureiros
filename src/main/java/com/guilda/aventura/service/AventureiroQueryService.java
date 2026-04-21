@@ -25,7 +25,8 @@ public class AventureiroQueryService {
     public Page<Aventureiro> listar(Long orgId, Boolean ativo,
                                      ClasseAventureiro classe,
                                      Integer nivelMinimo, Pageable pageable) {
-        return repository.listarComFiltros(orgId, ativo, classe, nivelMinimo, pageable);
+        String classeStr = classe != null ? classe.name() : null;
+        return repository.listarComFiltros(orgId, ativo, classeStr, nivelMinimo, pageable);
     }
 
     public Page<Aventureiro> buscarPorNome(Long orgId, String termo, Pageable pageable) {

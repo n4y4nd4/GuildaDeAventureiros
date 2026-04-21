@@ -51,7 +51,7 @@ public class PainelTaticoMissao {
     @Column(name = "indice_prontidao", insertable = false, updatable = false)
     private BigDecimal indiceProntidao;
 
-    protected PainelTaticoMissao() {}
+    public PainelTaticoMissao() {}
 
     public Long getMissaoId() { return missaoId; }
     public String getTitulo() { return titulo; }

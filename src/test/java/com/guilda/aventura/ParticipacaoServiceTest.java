@@ -84,15 +84,12 @@ class ParticipacaoServiceTest {
         assertThatThrownBy(() ->
             service.associar(10L, 2L, PapelMissao.SUPORTE, BigDecimal.ZERO, false))
             .isInstanceOf(RequisicaoInvalidaException.class)
-            .hasMessageContaining("inativo");
+            .satisfies(ex -> assertThat(((RequisicaoInvalidaException) ex).getDetalhes())
+                .anyMatch(d -> d.toLowerCase().contains("inativo")));
 
-        // Garante que nenhuma persistência foi tentada
         verify(participacaoRepository, never()).save(any());
-
         System.out.println("[ParticipacaoServiceTest] Aventureiro inativo rejeitado corretamente.");
     }
-
-    // ── Teste 2: organizações diferentes não podem se misturar ───────────────
 
     @Test
     void associar_organizacoesDiferentes_lancaExcecao() {
@@ -102,14 +99,12 @@ class ParticipacaoServiceTest {
         assertThatThrownBy(() ->
             service.associar(12L, 1L, PapelMissao.LIDER, BigDecimal.TEN, false))
             .isInstanceOf(RequisicaoInvalidaException.class)
-            .hasMessageContaining("organizações diferentes");
+            .satisfies(ex -> assertThat(((RequisicaoInvalidaException) ex).getDetalhes())
+                .anyMatch(d -> d.toLowerCase().contains("organiza")));
 
         verify(participacaoRepository, never()).save(any());
-
         System.out.println("[ParticipacaoServiceTest] Organização cruzada rejeitada corretamente.");
     }
-
-    // ── Teste 3: missão concluída não aceita novos participantes ─────────────
 
     @Test
     void associar_missaoConcluida_lancaExcecao() {
@@ -119,10 +114,10 @@ class ParticipacaoServiceTest {
         assertThatThrownBy(() ->
             service.associar(11L, 1L, PapelMissao.COMBATENTE, BigDecimal.ZERO, false))
             .isInstanceOf(RequisicaoInvalidaException.class)
-            .hasMessageContaining("CONCLUIDA");
+            .satisfies(ex -> assertThat(((RequisicaoInvalidaException) ex).getDetalhes())
+                .anyMatch(d -> d.contains("CONCLUIDA")));
 
         verify(participacaoRepository, never()).save(any());
-
         System.out.println("[ParticipacaoServiceTest] Missão concluída rejeitada corretamente.");
     }
 
