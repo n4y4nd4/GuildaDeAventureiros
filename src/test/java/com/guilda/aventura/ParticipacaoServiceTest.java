@@ -32,10 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-/**
- * Testes de regras de negócio do ParticipacaoService.
- * Usa mocks — não depende do banco.
- */
+
 @ExtendWith(MockitoExtension.class)
 class ParticipacaoServiceTest {
 

@@ -25,7 +25,6 @@ public class MissaoQueryController {
         this.service = service;
     }
 
-    /** GET /missoes?orgId=1&status=CONCLUIDA&nivelPerigo=ALTO */
     @GetMapping
     public ResponseEntity<?> listar(
             @RequestParam Long orgId,
@@ -40,9 +39,7 @@ public class MissaoQueryController {
 
         var pageable = PageRequest.of(page, size, Sort.by("dataCriacao").descending());
         var resultado = service.listar(orgId, status, nivelPerigo, dataInicio, dataFim, pageable);
-        var dados = resultado.getContent().stream()
-            .map(MissaoResponse::de)
-            .toList();
+        var dados = resultado.getContent().stream().map(MissaoResponse::de).toList();
         return ResponseEntity.ok(Map.of(
             "dados", dados,
             "totalElements", resultado.getTotalElements(),
@@ -50,7 +47,6 @@ public class MissaoQueryController {
         ));
     }
 
-    /** GET /missoes/{id} — detalhe com participantes */
     @GetMapping("/{id}")
     public ResponseEntity<MissaoResponse> detalhe(@PathVariable Long id) {
         return service.detalhe(id)
@@ -59,7 +55,6 @@ public class MissaoQueryController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    /** GET /missoes/relatorio?orgId=1 */
     @GetMapping("/relatorio")
     public ResponseEntity<List<RelatorioMissaoView>> relatorio(
             @RequestParam Long orgId,

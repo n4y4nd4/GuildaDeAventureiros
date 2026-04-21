@@ -19,7 +19,6 @@ public class PainelTaticoController {
         this.service = service;
     }
 
-    /** GET /missoes/top15dias — Top 10 dos últimos 15 dias, cacheado por 5min */
     @GetMapping("/top15dias")
     public ResponseEntity<List<PainelTaticoResponse>> top15Dias() {
         var resultado = service.buscarTop10UltimosQuinzeDias().stream()

@@ -17,11 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-/**
- * Questão 1 — Teste do PainelTaticoService.
- * Usa mock do repositório — não depende do banco.
- * Imprime evidência de execução no console conforme exigido pelo enunciado.
- */
+
 @ExtendWith(MockitoExtension.class)
 class PainelTaticoServiceTest {
 
@@ -39,7 +35,6 @@ class PainelTaticoServiceTest {
 
         List<PainelTaticoMissao> resultado = service.buscarTop10UltimosQuinzeDias();
 
-        // Evidência de execução — print obrigatório pelo enunciado
         System.out.println("=== EVIDÊNCIA: PainelTaticoService.buscarTop10UltimosQuinzeDias() ===");
         for (int i = 0; i < resultado.size(); i++) {
             PainelTaticoMissao m = resultado.get(i);

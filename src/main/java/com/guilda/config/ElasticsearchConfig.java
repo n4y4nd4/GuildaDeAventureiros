@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Questão 3 — Configuração do cliente Elasticsearch 8.x.
- */
 @Configuration
 public class ElasticsearchConfig {
 
@@ -24,12 +21,8 @@ public class ElasticsearchConfig {
 
     @Bean
     public ElasticsearchClient elasticsearchClient() {
-        RestClient restClient = RestClient.builder(
-            new HttpHost(host, port)
-        ).build();
-        ElasticsearchTransport transport = new RestClientTransport(
-            restClient, new JacksonJsonpMapper()
-        );
+        RestClient restClient = RestClient.builder(new HttpHost(host, port)).build();
+        ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
         return new ElasticsearchClient(transport);
     }
 }

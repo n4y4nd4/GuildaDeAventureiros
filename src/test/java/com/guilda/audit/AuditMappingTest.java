@@ -15,14 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Parte 1 — Testes de mapeamento do schema audit.
- *
- * Demonstra:
- * - Usuário e roles são carregados corretamente
- * - Relacionamento com organização funciona
- * - Permissões estão acessíveis via roles
- */
+
 @DataJpaTest
 @ActiveProfiles("test")
 class AuditMappingTest {

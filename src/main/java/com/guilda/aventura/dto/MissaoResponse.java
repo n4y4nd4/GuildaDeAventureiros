@@ -18,36 +18,15 @@ public record MissaoResponse(
         LocalDateTime dataFim,
         List<ParticipacaoResponse> participacoes
 ) {
-    /** Para listagem — sem participantes */
     public static MissaoResponse de(Missao m) {
-        return new MissaoResponse(
-            m.getId(),
-            m.getTitulo(),
-            m.getStatus(),
-            m.getNivelPerigo(),
-            m.getOrganizacao().getId(),
-            m.getDataCriacao(),
-            m.getDataInicio(),
-            m.getDataFim(),
-            List.of()
-        );
+        return new MissaoResponse(m.getId(), m.getTitulo(), m.getStatus(), m.getNivelPerigo(),
+            m.getOrganizacao().getId(), m.getDataCriacao(), m.getDataInicio(), m.getDataFim(), List.of());
     }
 
-    /** Para detalhe — com participantes */
     public static MissaoResponse deComParticipantes(Missao m) {
         List<ParticipacaoResponse> parts = m.getParticipacoes().stream()
-            .map(ParticipacaoResponse::de)
-            .toList();
-        return new MissaoResponse(
-            m.getId(),
-            m.getTitulo(),
-            m.getStatus(),
-            m.getNivelPerigo(),
-            m.getOrganizacao().getId(),
-            m.getDataCriacao(),
-            m.getDataInicio(),
-            m.getDataFim(),
-            parts
-        );
+            .map(ParticipacaoResponse::de).toList();
+        return new MissaoResponse(m.getId(), m.getTitulo(), m.getStatus(), m.getNivelPerigo(),
+            m.getOrganizacao().getId(), m.getDataCriacao(), m.getDataInicio(), m.getDataFim(), parts);
     }
 }

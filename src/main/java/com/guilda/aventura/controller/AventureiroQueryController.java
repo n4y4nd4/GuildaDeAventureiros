@@ -25,7 +25,6 @@ public class AventureiroQueryController {
         this.service = service;
     }
 
-    /** GET /aventureiros?orgId=1&ativo=true&classe=GUERREIRO&nivelMinimo=5&page=0&size=10&sort=nome */
     @GetMapping
     public ResponseEntity<?> listar(
             @RequestParam Long orgId,
@@ -38,9 +37,7 @@ public class AventureiroQueryController {
 
         var pageable = PageRequest.of(page, size, Sort.by(sort));
         var resultado = service.listar(orgId, ativo, classe, nivelMinimo, pageable);
-        var dados = resultado.getContent().stream()
-            .map(AventureiroResponse::de)
-            .toList();
+        var dados = resultado.getContent().stream().map(AventureiroResponse::de).toList();
         return ResponseEntity.ok(Map.of(
             "dados", dados,
             "totalElements", resultado.getTotalElements(),
@@ -50,7 +47,6 @@ public class AventureiroQueryController {
         ));
     }
 
-    /** GET /aventureiros/busca?orgId=1&termo=ald */
     @GetMapping("/busca")
     public ResponseEntity<?> buscarPorNome(
             @RequestParam Long orgId,
@@ -60,16 +56,13 @@ public class AventureiroQueryController {
 
         var pageable = PageRequest.of(page, size);
         var resultado = service.buscarPorNome(orgId, termo, pageable);
-        var dados = resultado.getContent().stream()
-            .map(AventureiroResponse::de)
-            .toList();
+        var dados = resultado.getContent().stream().map(AventureiroResponse::de).toList();
         return ResponseEntity.ok(Map.of(
             "dados", dados,
             "totalElements", resultado.getTotalElements()
         ));
     }
 
-    /** GET /aventureiros/{id} — detalhe com companheiro + participações (via projeção) */
     @GetMapping("/{id}")
     public ResponseEntity<AventureiroDetalheView> detalhe(@PathVariable Long id) {
         return service.detalhe(id)
@@ -77,7 +70,6 @@ public class AventureiroQueryController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    /** GET /aventureiros/ranking?orgId=1 */
     @GetMapping("/ranking")
     public ResponseEntity<List<RankingAventureiroView>> ranking(
             @RequestParam Long orgId,

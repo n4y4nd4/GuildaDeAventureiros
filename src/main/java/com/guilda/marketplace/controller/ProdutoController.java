@@ -9,10 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Questão 3 — Controller REST do marketplace.
- * Toda lógica de query fica no ElasticsearchService.
- */
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -22,8 +18,6 @@ public class ProdutoController {
     public ProdutoController(ElasticsearchService service) {
         this.service = service;
     }
-
-    // ── Parte A: Buscas Textuais ──────────────────────────────────────────────
 
     @GetMapping("/busca/nome")
     public ResponseEntity<List<ProdutoDTO>> buscarPorNome(@RequestParam String termo) throws Exception {
@@ -50,8 +44,6 @@ public class ProdutoController {
         return ResponseEntity.ok(service.buscarMultiCampos(termo));
     }
 
-    // ── Parte B: Buscas com Filtros ───────────────────────────────────────────
-
     @GetMapping("/busca/com-filtro")
     public ResponseEntity<List<ProdutoDTO>> buscarComFiltro(
             @RequestParam String termo,
@@ -74,8 +66,6 @@ public class ProdutoController {
             @RequestParam(required = false) BigDecimal max) throws Exception {
         return ResponseEntity.ok(service.buscarAvancada(categoria, raridade, min, max));
     }
-
-    // ── Parte C: Agregações ───────────────────────────────────────────────────
 
     @GetMapping("/agregacoes/por-categoria")
     public ResponseEntity<Map<String, Long>> porCategoria() throws Exception {

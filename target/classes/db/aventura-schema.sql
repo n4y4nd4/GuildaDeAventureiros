@@ -1,6 +1,3 @@
--- Schema aventura — executar uma vez no banco antes de subir a aplicação
--- NÃO altera o schema audit (legado)
-
 CREATE SCHEMA IF NOT EXISTS aventura;
 
 CREATE TABLE IF NOT EXISTS aventura.aventureiros (

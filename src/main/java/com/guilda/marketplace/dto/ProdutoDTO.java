@@ -2,9 +2,6 @@ package com.guilda.marketplace.dto;
 
 import java.math.BigDecimal;
 
-/**
- * Questão 3 — DTO de produto do índice guilda_loja.
- */
 public class ProdutoDTO {
     private String nome;
     private String descricao;
