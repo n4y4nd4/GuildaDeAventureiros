@@ -1,4 +1,4 @@
-package com.guilda.dto.response;
+package com.guilda.common.dto;
 
 import java.util.List;
 

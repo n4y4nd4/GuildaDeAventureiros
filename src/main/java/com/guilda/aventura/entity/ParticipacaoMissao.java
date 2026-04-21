@@ -6,11 +6,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Mapeado sobre operacoes.participacao_missao (DDL real do banco).
- * Colunas: missao_id, aventureiro_id, papel, recompensa_ouro, destaque, data_registro
- * PK composta: (missao_id, aventureiro_id)
- */
 @Entity
 @IdClass(ParticipacaoMissaoId.class)
 @Table(schema = "operacoes", name = "participacao_missao")
@@ -33,7 +28,6 @@ public class ParticipacaoMissao {
     @Column(name = "recompensa_ouro", precision = 10, scale = 2)
     private BigDecimal recompensaOuro = BigDecimal.ZERO;
 
-    // coluna real: destaque (não mvp)
     @Column(nullable = false)
     private boolean destaque = false;
 

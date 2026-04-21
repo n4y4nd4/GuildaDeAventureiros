@@ -9,20 +9,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Mapeado sobre operacoes.missao (DDL real do banco).
- * Colunas: id, organizacao_id, titulo, nivel_perigo, status,
- *          data_criacao, data_inicio, data_fim
- */
 @Entity
 @Table(schema = "operacoes", name = "missao")
 public class Missao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "missao_seq")
-    @SequenceGenerator(name = "missao_seq",
-                       sequenceName = "operacoes.missao_id_seq",
-                       allocationSize = 1)
+    @SequenceGenerator(name = "missao_seq", sequenceName = "operacoes.missao_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -49,8 +42,7 @@ public class Missao {
     @Column(name = "data_fim")
     private LocalDateTime dataFim;
 
-    @OneToMany(mappedBy = "missao", cascade = CascadeType.ALL,
-               orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "missao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ParticipacaoMissao> participacoes = new ArrayList<>();
 
     protected Missao() {}

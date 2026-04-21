@@ -1,4 +1,4 @@
-package com.guilda.exception;
+package com.guilda.common.exception;
 
 import java.util.List;
 

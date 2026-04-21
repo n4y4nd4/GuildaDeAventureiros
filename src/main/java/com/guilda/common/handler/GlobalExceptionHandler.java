@@ -1,8 +1,7 @@
-package com.guilda.handler;
+package com.guilda.common.handler;
 
-import com.guilda.dto.response.ErroResponse;
-import com.guilda.exception.AvenureiroNaoEncontradoException;
-import com.guilda.exception.RequisicaoInvalidaException;
+import com.guilda.common.dto.ErroResponse;
+import com.guilda.common.exception.RequisicaoInvalidaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,12 +14,6 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(AvenureiroNaoEncontradoException.class)
-    public ResponseEntity<ErroResponse> handleNaoEncontrado(AvenureiroNaoEncontradoException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(new ErroResponse(ex.getMessage(), List.of()));
-    }
 
     @ExceptionHandler(RequisicaoInvalidaException.class)
     public ResponseEntity<ErroResponse> handleInvalido(RequisicaoInvalidaException ex) {
@@ -40,13 +33,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErroResponse> handleTipoInvalido(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new ErroResponse("Solicitação inválida", List.of("valor inválido para o parâmetro: " + ex.getName())));
+            .body(new ErroResponse("Solicitação inválida",
+                List.of("valor inválido para o parâmetro: " + ex.getName())));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroResponse> handleNotReadable(HttpMessageNotReadableException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new ErroResponse("Solicitação inválida", List.of("corpo da requisição inválido ou mal formatado")));
+            .body(new ErroResponse("Solicitação inválida",
+                List.of("corpo da requisição inválido ou mal formatado")));
     }
 
     @ExceptionHandler(Exception.class)

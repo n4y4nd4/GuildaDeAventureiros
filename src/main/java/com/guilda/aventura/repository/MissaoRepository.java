@@ -16,7 +16,6 @@ import java.util.Optional;
 
 public interface MissaoRepository extends JpaRepository<Missao, Long> {
 
-    // Listagem com filtros
     @Query("""
         SELECT m FROM Missao m
         WHERE m.organizacao.id = :orgId
@@ -33,7 +32,6 @@ public interface MissaoRepository extends JpaRepository<Missao, Long> {
             @Param("dataFim") LocalDateTime dataFim,
             Pageable pageable);
 
-    // Detalhamento com participantes
     @Query("""
         SELECT DISTINCT m FROM Missao m
         LEFT JOIN FETCH m.participacoes p
@@ -42,7 +40,6 @@ public interface MissaoRepository extends JpaRepository<Missao, Long> {
         """)
     Optional<Missao> buscarComParticipantes(@Param("id") Long id);
 
-    // Relatório com métricas
     @Query("""
         SELECT m.id AS id,
                m.titulo AS titulo,

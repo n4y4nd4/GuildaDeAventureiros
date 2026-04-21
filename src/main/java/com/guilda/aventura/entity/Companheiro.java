@@ -3,10 +3,6 @@ package com.guilda.aventura.entity;
 import com.guilda.aventura.enums.EspecieCompanheiro;
 import jakarta.persistence.*;
 
-/**
- * Mapeado sobre operacoes.companheiro (DDL real do banco).
- * Colunas: aventureiro_id (PK/FK), nome, especie, indice_lealdade
- */
 @Entity
 @Table(schema = "operacoes", name = "companheiro")
 public class Companheiro {
@@ -26,14 +22,12 @@ public class Companheiro {
     @Column(nullable = false, length = 40)
     private EspecieCompanheiro especie;
 
-    // coluna real: indice_lealdade
     @Column(name = "indice_lealdade", nullable = false)
     private Integer lealdade;
 
     protected Companheiro() {}
 
-    public Companheiro(Aventureiro aventureiro, String nome,
-                       EspecieCompanheiro especie, Integer lealdade) {
+    public Companheiro(Aventureiro aventureiro, String nome, EspecieCompanheiro especie, Integer lealdade) {
         this.aventureiro = aventureiro;
         this.nome = nome;
         this.especie = especie;

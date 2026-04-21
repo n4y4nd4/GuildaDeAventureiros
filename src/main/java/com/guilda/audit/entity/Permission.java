@@ -2,21 +2,13 @@ package com.guilda.audit.entity;
 
 import jakarta.persistence.*;
 
-/**
- * Parte 1 — Mapeamento do schema audit (legado).
- * Tabela: audit.permissions
- * Constraint: permissions_code_key (code único)
- */
 @Entity
 @Table(schema = "audit", name = "permissions")
 public class Permission {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-                    generator = "permissions_seq")
-    @SequenceGenerator(name = "permissions_seq",
-                       sequenceName = "audit.permissions_id_seq",
-                       allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permissions_seq")
+    @SequenceGenerator(name = "permissions_seq", sequenceName = "audit.permissions_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, length = 80, unique = true)

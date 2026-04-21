@@ -1,0 +1,148 @@
+### BASE URL
+@baseUrl = http://localhost:8080
+
+###############################################################################
+# AVENTUREIROS — JPA / PostgreSQL
+###############################################################################
+
+### Listar aventureiros (sem filtros)
+GET {{baseUrl}}/aventureiros?orgId=1
+
+###
+
+### Listar com filtro por classe
+GET {{baseUrl}}/aventureiros?orgId=1&classe=GUERREIRO
+
+###
+
+### Listar com filtro por ativo
+GET {{baseUrl}}/aventureiros?orgId=1&ativo=true
+
+###
+
+### Listar com filtro por nível mínimo
+GET {{baseUrl}}/aventureiros?orgId=1&nivelMinimo=5
+
+###
+
+### Listar com paginação e ordenação por nível
+GET {{baseUrl}}/aventureiros?orgId=1&page=0&size=5&sort=nivel
+
+###
+
+### Listar com múltiplos filtros
+GET {{baseUrl}}/aventureiros?orgId=1&classe=GUERREIRO&ativo=true&nivelMinimo=3&page=0&size=10
+
+###
+
+### Busca textual por nome
+GET {{baseUrl}}/aventureiros/busca?orgId=1&termo=al
+
+###
+
+### Ranking de participação
+GET {{baseUrl}}/aventureiros/ranking?orgId=1
+
+###
+
+### Ranking com filtro de status de missão
+GET {{baseUrl}}/aventureiros/ranking?orgId=1&statusMissao=CONCLUIDA
+
+###
+
+### Visualização completa do aventureiro por id
+GET {{baseUrl}}/aventureiros/1
+
+###############################################################################
+# MISSOES — JPA / PostgreSQL
+###############################################################################
+
+### Top 10 missões dos últimos 15 dias (com cache)
+GET {{baseUrl}}/missoes/top15dias
+
+###
+
+### Listar missões
+GET {{baseUrl}}/missoes?orgId=1
+
+###
+
+### Listar com filtro por status
+GET {{baseUrl}}/missoes?orgId=1&status=CONCLUIDA
+
+###
+
+### Listar com filtro por nível de perigo
+GET {{baseUrl}}/missoes?orgId=1&nivelPerigo=ALTO
+
+###
+
+### Detalhamento de missão com participantes
+GET {{baseUrl}}/missoes/1
+
+###
+
+### Relatório de missões com métricas
+GET {{baseUrl}}/missoes/relatorio?orgId=1
+
+###############################################################################
+# MARKETPLACE — Elasticsearch (índice guilda_loja)
+###############################################################################
+
+### Busca por nome
+GET {{baseUrl}}/produtos/busca/nome?termo=espada
+
+###
+
+### Busca por descrição
+GET {{baseUrl}}/produtos/busca/descricao?termo=cura
+
+###
+
+### Busca por frase exata
+GET {{baseUrl}}/produtos/busca/frase?termo=cura superior
+
+###
+
+### Busca fuzzy
+GET {{baseUrl}}/produtos/busca/fuzzy?termo=espdaa
+
+###
+
+### Busca em múltiplos campos
+GET {{baseUrl}}/produtos/busca/multicampos?termo=dragao
+
+###
+
+### Busca com filtro por categoria
+GET {{baseUrl}}/produtos/busca/com-filtro?termo=pocao&categoria=pocoes
+
+###
+
+### Busca por faixa de preço
+GET {{baseUrl}}/produtos/busca/faixa-preco?min=50&max=300
+
+###
+
+### Busca avançada
+GET {{baseUrl}}/produtos/busca/avancada?categoria=armas&raridade=raro&min=200&max=1000
+
+###
+
+### Quantidade por categoria
+GET {{baseUrl}}/produtos/agregacoes/por-categoria
+
+###
+
+### Quantidade por raridade
+GET {{baseUrl}}/produtos/agregacoes/por-raridade
+
+###
+
+### Preço médio
+GET {{baseUrl}}/produtos/agregacoes/preco-medio
+
+###
+
+### Faixas de preço
+GET {{baseUrl}}/produtos/agregacoes/faixas-preco

@@ -9,14 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Questão 2 — Configuração de cache com Caffeine.
- *
- * Estratégia escolhida: expireAfterWrite com TTL de 5 minutos.
- * - A view vw_painel_tatico_missao é atualizada com baixa frequência.
- * - 5 minutos é um equilíbrio entre consistência e redução de carga no banco.
- * - maximumSize=10 porque o endpoint retorna no máximo 10 registros.
- */
 @Configuration
 @EnableCaching
 public class CacheConfig {

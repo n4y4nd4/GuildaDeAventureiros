@@ -9,15 +9,6 @@ import org.hibernate.annotations.Immutable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Questão 1 — Entity JPA somente leitura.
- *
- * Mapeada sobre a view operacoes.vw_painel_tatico_missao
- * (o enunciado chama de mv_painel_tatico_missao, mas no banco existe como vw_).
- *
- * @Immutable garante que o Hibernate nunca emite INSERT/UPDATE/DELETE.
- * Nenhuma coluna foi renomeada ou alterada.
- */
 @Entity
 @Immutable
 @Table(schema = "operacoes", name = "vw_painel_tatico_missao")
@@ -54,7 +45,6 @@ public class PainelTaticoMissao {
     @Column(name = "participantes_com_companheiro", insertable = false, updatable = false)
     private Long participantesComCompanheiro;
 
-    // timestamp without time zone → LocalDateTime (sem timezone, conforme DDL real)
     @Column(name = "ultima_atualizacao", insertable = false, updatable = false)
     private LocalDateTime ultimaAtualizacao;
 

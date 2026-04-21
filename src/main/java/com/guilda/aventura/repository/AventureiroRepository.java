@@ -16,10 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AventureiroRepository
-        extends JpaRepository<Aventureiro, Long>,
-                JpaSpecificationExecutor<Aventureiro> {
+        extends JpaRepository<Aventureiro, Long>, JpaSpecificationExecutor<Aventureiro> {
 
-    // Listagem com filtros
     @Query("""
         SELECT a FROM Aventureiro a
         WHERE (:ativo IS NULL OR a.ativo = :ativo)
@@ -34,7 +32,6 @@ public interface AventureiroRepository
             @Param("nivelMinimo") Integer nivelMinimo,
             Pageable pageable);
 
-    // Busca textual parcial por nome
     @Query("""
         SELECT a FROM Aventureiro a
         WHERE LOWER(a.nome) LIKE LOWER(CONCAT('%', :termo, '%'))
@@ -45,7 +42,6 @@ public interface AventureiroRepository
             @Param("termo") String termo,
             Pageable pageable);
 
-    // Visualização completa com companheiro e participações
     @Query("""
         SELECT a.id AS id,
                a.nome AS nome,
@@ -66,7 +62,6 @@ public interface AventureiroRepository
         """)
     Optional<AventureiroDetalheView> buscarDetalhe(@Param("id") Long id);
 
-    // Ranking de participação
     @Query("""
         SELECT a.id AS id,
                a.nome AS nome,
